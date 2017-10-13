@@ -1,0 +1,24 @@
+{
+  "name": "wemix",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "babel src/ --out-dir ../ss/dist/npm/wemix/lib/ --source-maps",
+    "watch-compile": "npm run build -- --watch",
+    "watch": "npm run watch-compile",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sanshao",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.1.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.5.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}
