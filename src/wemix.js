@@ -11,13 +11,5 @@ export default {
     page: page,
 
     $createApp: base.$createApp,
-    $createPage: base.$createPage,
-
-    $isEmpty: util.$isEmpty,
-    $isEqual: util.$isEqual,
-    $isDeepEqual: util.$isDeepEqual,
-    $has: util.$has,
-    $extend: util.$extend,
-    $isPlainObject: util.$isPlainObject,
-    $copy: util.$copy,
+    $createPage: base.$createPage
 }

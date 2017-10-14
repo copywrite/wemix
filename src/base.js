@@ -12,7 +12,7 @@ let $bindEvt = (page, config, com, prefix) => {
   Object.getOwnPropertyNames(com.components || {}).forEach((name) => {
     let cClass = com.components[name]
     let child = new cClass()
-    PAGE_EVENT['pcCountUp'].forEach((v) => {
+    PAGE_EVENT['pcCountUp'].concat(['onRoute']).forEach((v) => {
       if (child[v]) {
         let funcV = (...args) => {
           return child[v].apply(child, args)
@@ -95,10 +95,35 @@ export default {
         })
       }
     }
+
+    config.onShow = function (...args) {
+      self.$instance.__prevPage__ = page
+
+      page.onShow && page.onShow.apply(page, args)
+      if (page.$coms['onShow'] && page.$coms['onShow'].length) {
+        page.$coms['onShow'].forEach((load) => {
+          load(...args)
+        })
+      }
+
+      let pages = getCurrentPages()
+      let pageId = pages[pages.length - 1].__route__ || pages[pages.length - 1].route
+
+      if (self.$instance.__route__ !== pageId) {
+        self.$instance.__route__ = pageId
+        page.onRoute && page.onRoute.apply(page, args)
+        if (page.$coms['onRoute'] && page.$coms['onRoute'].length) {
+          page.$coms['onRoute'].forEach((load) => {
+            load(...args)
+          })
+        }
+      }
+    }
+
     config = $bindEvt(page, config, page, '')
 
     PAGE_EVENT['pcCountUp'].forEach((v) => {
-      if (v !== 'onLoad') {
+      if (v !== 'onLoad' && v !== 'onShow') {
         config[v] = (...args) => {
           page[v] && page[v].apply(page, args)
           page.$coms[v] && page.$coms[v].forEach((func) => {
