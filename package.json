@@ -1,17 +1,35 @@
 {
   "name": "wemix",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "this is a wechat small program component extension package",
   "main": "index.js",
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "babel src/ --out-dir ../ss/dist/npm/wemix/lib/ --source-maps",
-    "watch-compile": "npm run build -- --watch",
+    "build": "babel src/ --out-dir lib/ --source-maps",
     "watch": "npm run watch-compile",
+    "prepublish": "npm run build",
+    "watch-compile": "npm run build -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hisanshao/wemix.git"
+  },
+  "keywords": [
+    "wechat small program",
+    "component"
+  ],
   "author": "sanshao",
-  "license": "ISC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hisanshao/wemix/issues"
+  },
+  "homepage": "https://github.com/hisanshao/wemix#readme",
+  "standard": {
+    "ignore": [
+      "node_modules/*",
+      "lib/*"
+    ]
+  },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.1.1",
