@@ -63,6 +63,7 @@ export default {
     let app = new appClass()
 
     if (!this.$instance) {
+      app.$init(this)
       this.$instance = app
     }
 
