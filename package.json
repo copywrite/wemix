@@ -1,6 +1,6 @@
 {
   "name": "wemix",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "this is a wechat small program component extension package",
   "main": "lib/wemix.js",
   "scripts": {
@@ -31,12 +31,13 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-eslint": "^7.1.1",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.5.1"
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "lodash": "^4.17.4"
+    "babel-runtime": "^6.26.0"
   }
 }

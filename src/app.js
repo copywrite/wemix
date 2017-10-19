@@ -1,5 +1,4 @@
 import native from './native'
-import _ from 'lodash'
 
 let RequestMQ = {
   map: {},
@@ -54,7 +53,7 @@ export default class {
     this.$initAPI(wemix)
   }
   $initAPI (wemix) {
-    _.keys(wx).forEach((key) => {
+    Object.keys(wx).forEach((key) => {
       if (key === 'request') {
         Object.defineProperty(native, key, {
           get () { return (obj) => RequestMQ.request(obj) }
