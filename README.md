@@ -164,6 +164,14 @@ export default class extends wemix.app {
 
 ```
 #####<font color=#34495e>Page和Component实例</font>
+
+
+```
+// 可在page和component组件内通过以下设置改变globalData
+this.setGlobalData({})
+this.getGlobalData()
+```
+
 ```
 import wemix from 'wemix'
 
