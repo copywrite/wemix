@@ -5,9 +5,12 @@
   "main": "lib/wemix.js",
   "scripts": {
     "build": "babel src/ --out-dir lib/ --source-maps",
+    "build-local": "babel src/ --out-dir ./../../../xiaodian/wspxdm/node_modules/wemix/lib/ --source-maps",
     "watch": "npm run watch-compile",
+    "watch-local": "npm run watch-local-compile",
     "prepublish": "npm run build",
     "watch-compile": "npm run build -- --watch",
+    "watch-local-compile": "npm run build-local -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
