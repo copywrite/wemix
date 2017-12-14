@@ -46,6 +46,7 @@ let $bindEvt = (app, page, config, com, prefix) => {
 
   Object.getOwnPropertyNames(com.methods || []).forEach((method, i) => {
     if (method !== 'length') {
+      com.methods[method] = com.methods[method].bind(com)
       // 不用箭头符，this为原生Page的作用域
       config[com.$prefix + method] = function (e, ...args) {
         let comfn = com.methods[method]

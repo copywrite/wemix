@@ -1,6 +1,6 @@
 {
   "name": "wemix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "this is a wechat small program component extension package",
   "main": "lib/wemix.js",
   "scripts": {
