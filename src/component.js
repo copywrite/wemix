@@ -1,4 +1,5 @@
 import util from './util'
+import clonedeep from 'lodash.clonedeep'
 
 const Props = {
   checkComListeners (_class, listenerName, args) {
@@ -64,14 +65,10 @@ export default class {
       this.props = Props.format(this.$wxpage, this.$mappingProps, this.$root.$props[this.$name], this.$root.$events[this.$name])
     }
 
-    if (!this.__data__ && !this.__customerData__) {
-      this.__data__ = util.$copy(this.data || {}, true)
-      this.__customerData__ = util.$copy(this.customerData || {}, true)
-    }
-
-    this.data = util.$copy(this.__data__ || {}, true)
-    this.customerData = util.$copy(this.__customerData__ || {}, true)
+    this.data = clonedeep(this.$data || {})
+    this.customerData = clonedeep(this.$customerData || {})
     this.setData(this.data, 'init')
+
     let coms = Object.getOwnPropertyNames(this.$com)
     if (coms.length) {
       coms.forEach((name) => {

@@ -147,11 +147,6 @@ export default {
 
     PAGE_EVENT['pcCountDown'].forEach((v) => {
       config[v] = (...args) => {
-        if (v === 'onUnload') {
-          page.data = util.$copy(page.__data__ || {}, true)
-          page.customerData = util.$copy(page.__customerData__ || {}, true)
-          page.setData(page.data, 'init')
-        }
         page[v] && page[v].apply(page, args)
         page.$coms[v] && page.$coms[v].forEach((func) => {
           func(...args)
