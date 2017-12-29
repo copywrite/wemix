@@ -24,19 +24,20 @@ const Props = {
         }
       } else {
         $mappingProps[key] = props[key]['value']
-        let actValue
-        try {
-          actValue = new Function(`return ${$wxpage.data[props[key]['value']]}`)()
-          newProps[key] = actValue
-        } catch (e) {
-          let actDefaultValue
-          try {
-            actDefaultValue = new Function(`return ${$wxpage.data[props[key]['defaultValue']]}`)()
-            newProps[key] = actDefaultValue
-          } catch (e) {
+        newProps[key] = $wxpage.data[props[key]['value']] || $wxpage.data[props[key]['defaultValue']]
+        // let actValue
+        // try {
+        //   actValue = $wxpage.data[props[key]['value']]
+        //   newProps[key] = actValue
+        // } catch (e) {
+        //   let actDefaultValue
+        //   try {
+        //     actDefaultValue = $wxpage.data[props[key]['defaultValue']]
+        //     newProps[key] = actDefaultValue
+        //   } catch (e) {
             
-          }
-        }
+        //   }
+        // }
       }
     }
     for (let k in events) {
