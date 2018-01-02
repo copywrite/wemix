@@ -43,7 +43,6 @@ wemix build -p --no-cache //线上
 1. 本地开发选择`dist`目录
 2. 详情-->项目设置-->取消勾选ES6转ES5
 3. 详情-->项目设置-->取消勾选上传代码时样式自动补全
-4. 详情-->项目设置-->取消勾选代码上传时自动压缩
 
 ##<font color=#34495e>开发前阅读</font>
 1. 变量与方法使用尽量使用驼峰式命名，避免使用$开头。
@@ -52,11 +51,12 @@ wemix build -p --no-cache //线上
 ##<font color=#34495e>使用**wemix**的优点</font>
 在原有的小程序的开发模式下进行再次封装：
 
-1. Page实例增加onRoute生命周期避免onShow方法多次执行。
-2. 增加组件化开发，使组件间交互更加贴近于react的实现。
-3. 支持加载外部NPM包。
-4. 默认使用babel编译，具体默认配置参见wemix.config.js。
-5. 针对wx.request并发问题进行优化。
+1. App实例增加onRoute生命周期,监听路由变化。
+2. Page实例增加onRoute生命周期避免onShow方法多次执行。
+3. 增加组件化开发，使组件间交互更加贴近于react的实现。
+4. 支持加载外部NPM包。
+5. 默认使用babel编译，具体默认配置参见wemix.config.js。
+6. 针对wx.request并发问题进行优化。
 
 ##<font color=#34495e>实战说明</font>
 ###<font color=#34495e>关于编译及插件</font>
@@ -65,24 +65,13 @@ wemix build -p --no-cache //线上
 
   ```
   {
-      sourceMap: !production,
-      'presets': [
-        [
-          'env', config.env || {}
-        ]
-      ],
-      'plugins': [
-        [
-          'transform-runtime', config.transformRuntime || {
-            'helpers': false,
-            'polyfill': true,
-            'regenerator': false,
-            'moduleName': 'babel-runtime'
-          }
-        ],
-        ['transform-class-properties']
-      ]
-    } 
+    transformRuntime: {
+      helpers: false,
+      polyfill: true,
+      regenerator: false,
+      moduleName: 'babel-runtime'
+    }
+  } 
   ```
 * 线上构建的时候指定以下插件进行压缩，暂时不可配置：
 
@@ -113,7 +102,7 @@ wemix build -p --no-cache //线上
   ```
   
 ###<font color=#34495e>HTML说明</font>
-#####<font color=#34495e>基于编译效率优先原则，所有变量的引用均需要加入<font color=#FF5E45>`#{}`</font>包围</font>
+#####<font color=#34495e>基于编译效率优先原则，所有this.data内的变量的引用均需要加入<font color=#FF5E45>`#{}`</font>包围</font>
 
 ```
 <view class='container'>
@@ -133,29 +122,39 @@ wemix build -p --no-cache //线上
 import wemix from 'wemix'
 
 export default class extends wemix.app {
-  config = {
-    pages: [
-      'pages/index'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#FFFFFF',
-      navigationBarTitleText: 'WEMIX',
-      navigationBarTextStyle: 'black'
+  constructor () {
+    super()
+    this.config = {
+      pages: [
+        'pages/login'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#FFFFFF',
+        navigationBarTitleText: 'WEMIX',
+        navigationBarTextStyle: 'black'
+      },
+      networkTimeout: {
+        request: 10000,
+        downloadFile: 10000
+      }
+    }
+    // only define in app
+    this.globalData = {
+      
     }
   }
-  // only define in app
-  globalData = {
-    data: 'I am global data'
-  }
   onLaunch (options) {
-    // Do something initial when launch.
+
   }
   onShow (options) {
-    // Do something when show.
+
+  }
+  onRoute () {
+
   }
   onHide () {
-    // Do something when hide.
+
   }
   onError (msg) {
     console.log(msg)
@@ -167,122 +166,130 @@ export default class extends wemix.app {
 
 
 ```
-// 可在page和component组件内通过以下设置改变globalData
-this.setGlobalData({})
-this.getGlobalData()
+// 如何设置改变globalData
+app实例：
+1.let data = this.globalData.data
+page或component实例：
+1.constructor(app, page) { let data = app.globalData.data }
+2. let data = wemix.$instance.globalData.data
 ```
 
 ```
 import wemix from 'wemix'
 
-export default class Com extends wemix.component {
-  defaultProps = {
-    text: 'page text'
-  }
-  data = {
-    text: 'This is component data.'
-  }
-  customerData = {
+export default class LoginComponent extends wemix.component {
+  constructor (app, page) {
+    super()
+    this.data = {
 
-  }
-  methods = {
-    viewTapPage (e) {
-      this.props.viewTap(e)
-    },
-    viewTapComponent (e) {
-      this.setData({
-        text: 'This is component data. from current'
-      })
+    }
+    this.components = {
+    
+    }
+    this.listeners = {
+    
+    }
+    this.customerData = {
+
+    }
+    this.methods = {
+      
     }
   }
   onLoad (options) {
-    // Do some initialize when page load.
+    
   }
   onReady () {
-    // Do something when page ready.
+    
   }
   onShow () {
-    // Do something when page show.
+    
   }
   onRoute () {
-    // Do something when route change.
+    
   }
   onHide () {
-    // Do something when page hide.
+    
   }
   onUnload () {
-    // Do something when page close.
+    
   }
   onPullDownRefresh () {
-    // Do something when pull down.
+    
   }
   onReachBottom () {
-    // Do something when page reach bottom.
+    
   }
 }
 ```
+
+###<font color=#34495e>组件说明</font>
+#####不管组件是否显示，一旦引用，其内部生命周期都会和page的生命周期一起执行，所以如果需要显示的时候才调用目前只能通过监听的方式实现
+
 ```
 import wemix from 'wemix'
-import Com from '../components/com'
+import LoginCom from '../components/login'
 
-export default class Index extends wemix.page {
-  config = {
-    navigationBarTitleText: '首页'
-  }
-  components = {
-    com: Com
-  }
-  data = {
-    text: 'This is page data.'
-  }
-  // methods包括小程序的bindtap,catchtap等事件，及props对应的事件
-  methods = {
-    viewTap (e) {
-      this.setData({
-        text: 'This is page data. from ' + e.currentTarget.dataset.from
-      }, () => {
-        // this is setData callback
-      })
+export default class LoginPage extends wemix.page {
+  constructor (app) {
+    super()
+    this.config = {
+      navigationBarTitleText: '请登录',
+      disableScroll: true
+    }
+    this.components = {
+      LoginCom: LoginCom
+    }
+    this.data = {
+
+    }
+    this.customerData = {
+
+    }
+    this.listeners = {
+    
+    }
+    // methods包括小程序的bindtap,catchtap等事件，及props对应的事件
+    this.methods = {
+
     }
   }
-  customerData = {
-    hi: 'MINA'
-  }
   onLoad (options) {
-    // Do some initialize when page load.
+    
   }
   onReady () {
-    // Do something when page ready.
+    
   }
   onShow () {
-    // Do something when page show.
+    
   }
   onRoute () {
-    // Do something when route change.
+    
   }
   onHide () {
-    // Do something when page hide.
+    
   }
   onUnload () {
-    // Do something when page close.
+    
   }
   onPullDownRefresh () {
-    // Do something when pull down.
+    
   }
   onReachBottom () {
-    // Do something when page reach bottom.
+    
   }
-  onShareAppMessage  () {
-    // return custom share data when user share.
+  onShareAppMessage () {
+    
   }
   onPageScroll () {
-    // Do something when page scroll
+    
   }
 }
+
 
 ```
 ###<font color=#34495e>组件</font>
-小程序支持js模块化，但彼此独立，业务代码与交互事件仍需在页面处理。无法实现组件化的松耦合与复用的效果。 例如模板A中绑定一个bindtap='#{myclick}'，模板B中同样绑定一样bindtap='#{myclick}'，那么就会影响同一个页面事件。对于数据同样如此。因此只有通过改变变量或者事件方法，或者给其加不同前缀才能实现绑定不同事件或者不同数据。当页面复杂之后就十分不利于开发维护。 因此wepy让小程序支持组件化开发，组件的所有业务与功能在组件本身实现，组件与组件之间彼此隔离，上述例子在wepy的组件化开发过程中，A组件只会影响到A绑定的myclick，B也如此。
+小程序支持js模块化，但彼此独立，业务代码与交互事件仍需在页面处理。无法实现组件化的松耦合与复用的效果。 例如模板A中绑定一个bindtap='#{myclick}'，模板B中同样绑定一样bindtap='#{myclick}'，那么就会影响同一个页面事件。对于数据同样如此。因此只有通过改变变量或者事件方法，或者给其加不同前缀才能实现绑定不同事件或者不同数据。当页面复杂之后就十分不利于开发维护。 因此wemix让小程序支持组件化开发，组件的所有业务与功能在组件本身实现，组件与组件之间彼此隔离，上述例子在wemix的组件化开发过程中，A组件只会影响到A绑定的myclick，B也如此。
 
 ####<font color=#34495e>组件间通讯</font>
 * 传递事件需要在变量名前添加<font color=#FF5E45>`v-on:`</font>来标记事件
@@ -292,7 +299,7 @@ export default class Index extends wemix.page {
 
 
 ```
-<com v-on:viewTap='#{viewTap}' text='{{#{text}}}' static:show='{{true}}'></com>
+<LoginCom v-on:viewTap='#{viewTap}' text='{{#{text}}}' static:show='{{true}}'></LoginCom>
 ```
 
 可在js中通过this.props.xxx获取事件或变量值
@@ -308,7 +315,7 @@ export default class Com extends wemix.component {
 ```
 <view>
   <view wx:if='{{#{props.show}}}' class='title'>{{#{props.text}}}</view>
-  <button bindtap='#{props.viewTap}' data-from='page(1)'>set page(1)</button>
+  <button bindtap='#{props.viewTap}' data-from='page'>set page</button>
 </view>
 ```
 
@@ -323,5 +330,17 @@ export default class Index extends wemix.page {
     com: Com
     com1: Com
   }
+}
+```
+###<font color=#34495e>监听</font>
+####<font color=#34495e>监听的方式有两种：</font>
+* 指监听当前页面及当前页面的组件内的listeners，需要将listenCurrentRoute：true。
+* 指监听路由栈内的所有页面及组件内的listeners，需要将listenCurrentRoute：false。此为默认方式。
+
+```
+this.$emit({listenerName: 'name', listenCurrentRoute: true}, args)
+
+this.listeners = {
+  ['name'] (args) {}
 }
 ```
